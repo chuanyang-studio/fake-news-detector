@@ -26,14 +26,32 @@
   <script>
     function analyzeNews() {
       const input = document.getElementById("newsInput").value;
-      if (!input) return alert("請先輸入新聞內容");
+      if (!input) return alert("請輸入新聞內容");
 
-      // 模擬分析結果（之後用 AJAX 或 fetch 接後端）
-      document.getElementById("result").style.display = "block";
-      document.getElementById("score").innerText = "42 / 100";
-      document.getElementById("explanation").innerText = "這則新聞缺乏明確來源，內容誇大，可信度偏低。";
-      document.getElementById("advice").innerText = "建議查證於官方新聞平台或事實查核網站。";
+      fetch("/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: input })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").style.display = "block";
+        document.getElementById("score").innerText = data.score + " / 100";
+        document.getElementById("explanation").innerText = data.explanation;
+        document.getElementById("advice").innerText = data.advice;
+
+        // 顏色變化
+        let box = document.getElementById("result");
+        if (data.score >= 70) {
+          box.style.backgroundColor = "#d4edda";
+        } else if (data.score >= 40) {
+          box.style.backgroundColor = "#fff3cd";
+        } else {
+          box.style.backgroundColor = "#f8d7da";
+        }
+      });
     }
   </script>
+
 </body>
 </html>
