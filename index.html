@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>AI 假新聞辨識器</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background-color: #f7f7f7; }
+    textarea { width: 100%; height: 200px; margin-top: 1rem; font-size: 1rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; font-size: 1rem; }
+    #result { margin-top: 2rem; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+  </style>
+</head>
+<body>
+  <h1>🧠 AI 假新聞辨識器</h1>
+  <p>請貼上你想分析的新聞內容：</p>
+  <textarea id="newsInput" placeholder="在這裡輸入新聞文本..."></textarea><br>
+  <button onclick="analyzeNews()">送出分析</button>
+
+  <div id="result" style="display: none;">
+    <h2>分析結果</h2>
+    <p><strong>可信度：</strong><span id="score">載入中...</span></p>
+    <p><strong>判斷說明：</strong><span id="explanation"></span></p>
+    <p><strong>建議行動：</strong><span id="advice"></span></p>
+  </div>
+
+  <script>
+    function analyzeNews() {
+      const input = document.getElementById("newsInput").value;
+      if (!input) return alert("請先輸入新聞內容");
+
+      // 模擬分析結果（之後用 AJAX 或 fetch 接後端）
+      document.getElementById("result").style.display = "block";
+      document.getElementById("score").innerText = "42 / 100";
+      document.getElementById("explanation").innerText = "這則新聞缺乏明確來源，內容誇大，可信度偏低。";
+      document.getElementById("advice").innerText = "建議查證於官方新聞平台或事實查核網站。";
+    }
+  </script>
+</body>
+</html>
