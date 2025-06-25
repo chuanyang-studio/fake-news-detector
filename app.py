@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify, render_template
+import requests
+import json
 
 app = Flask(__name__)
 
@@ -8,17 +10,30 @@ def home():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
+    # user prompt
     data = request.get_json()
     text = data.get("text", "")
-    
-    # ⛔ 模擬結果（之後可以串 GPT）
-    result = {
-        "score": 42,
-        "explanation": "這段新聞缺乏來源且誇大不實，可信度偏低。",
-        "advice": "請查閱可信來源或事實查核平台。"
-    }
 
-    return jsonify(result)
+    # system prompt
+    system_prompt = '''請你扮演一位新聞事實查核員，根據下列新聞內容，判斷是否可能為假新聞，並給出以下格式的 JSON 回應： {
+        "score": 0-100,
+        "explanation": xxx,
+        "advice": xxx
+    }
+    '''
+
+    # make request
+    endpoint = 'https://text.pollinations.ai/openai'
+    messages = []
+    messages.append({'role': 'system', 'content': system_prompt})
+    messages.append({'role': 'user', 'content': text})
+    
+    resp = requests.post(endpoint, json={'messages': messages, 'model': 'openai', 'jsonMode': 'true'})
+    result = resp.json()
+    result = result['choices'][0]['message']['content']
+
+    # get json response
+    return json.loads(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
